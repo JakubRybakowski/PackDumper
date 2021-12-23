@@ -22,7 +22,7 @@ Safe Exception Handlers -> No (/SAFESEH:NO)
 
 ✔️ If you've set DumpMethod = 1 (BY_PATH_LIST), you also need to make a ``PackDumperPathList.txt`` first. Check **PackDumperPathList File Explanations**
 
-✔️ Move ``PackDumperCfg.txt`` and ``PackDumperPathList.txt`` (the last, just in case you made one) to your ``Local Disk (C:\\)``
+✔️ Move ``PackDumperCfg.txt`` and ``PackDumperPathList.txt`` (the last, just in case you made one) to your ``Local Disk (C:\)``
 
 ✔️ Inject ``PackDumper.dll`` into the client
 
