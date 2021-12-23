@@ -55,6 +55,8 @@ Safe Exception Handlers -> No (/SAFESEH:NO)
 -------------
 ``Property -> CEterPackManagerGet_CallType``
 * The number of the CEterPackManagerGet_NumX function prototype you want to use (e.g., if you want to use the default call type that common Metin2 clients uses, set it to 1, or if you made another custom Get() function prototype, set the number from your custom)
+* Example -> CEterPackManagerGet_CallType[TAB]1
+* Example -> CEterPackManagerGet_CallType[TAB]2
 -------------
 ``Property -> pCEterPackManager_RVA``
 * RVA (Relative Virtual Address) from a pointer to CEterPackManager class
