@@ -46,7 +46,7 @@ Safe Exception Handlers -> No (/SAFESEH:NO)
 
 -------------
 ``Property -> DumpMethod``
-* DumpMethod = 1 (BY_PATH_LIST) -> Works by calling CEterPackManager::Get() with a specific path as c_szFileName argument. You can make a PackDumperPathList.txt with PathListDumper.CT (CheatEngine Script). It's 100% automated and you can get ALL paths for ALL files inside the "Pack" folder of your client. Check **PackDumperPathList File Explanations**
+* DumpMethod = 1 (BY_PATH_LIST) -> Works by calling CEterPackManager::Get() with a specific path as c_szFileName argument. You can make a PackDumperPathList.txt with PathListDumper.CT (CheatEngine Script). It's 100% automated and you can get ALL paths for ALL files inside the "pack" folder of your client. Check **PackDumperPathList File Explanations**
 * DumpMethod = 2 (ON_LOAD) -> Works by hooking CEterPackManager::Get() to intercept (and copy) every file being loaded by the game
 * DumpMethod = 3 (AUTO_HOOK) -> Same as DumpMethod 2 (ON_LOAD), but the hook is automatically placed at the same time you inject the dll. Use it in case you want to dump a file thats loaded only when the client starts (e.g. some files from root)
 * Example -> DumpMethod[TAB]1
