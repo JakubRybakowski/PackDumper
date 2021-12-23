@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="29">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>0</ID>
+      <Description>"++ PathListDumper"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{$lua}
+
+[Enable]
+PATH_PACK_DUMPER_PATH_LIST = 'C:/Users/' .. os.getenv('Username') .. '/Desktop/PackDumperPathList.txt'
+PATH_MAX_SIZE = 200
+Results = {}
+
+-- ######################################################################### --
+-- ######################################################################### --
+-- ######################################################################### --
+
+function GetTableLenght(Table)
+         local TableLenght = 0
+
+         for _ in pairs(Table) do
+             TableLenght = TableLenght + 1
+         end
+
+         return TableLenght
+end
+
+-- ######################################################################### --
+
+function StringToHexBytesString(String)
+         local HexBytesString = {}
+
+         for i, v in ipairs(stringToByteTable(String)) do
+             table.insert(HexBytesString, string.format('%x', v))
+         end
+
+         return table.concat(HexBytesString)
+end
+
+-- ######################################################################### --
+
+function PathHasBadChar(Path)
+         for i = 1, string.len(Path) do
+             local Char = string.byte(Path, i)
+
+             if Char &lt; 32 then return true end
+         end
+
+         return false
+end
+
+-- ######################################################################### --
+
+function AddStringListToTable(Table, StringToScan)
+         local StringList = AOBScan(StringToHexBytesString(StringToScan))
+
+         if StringList == nil then
+            print('[+] Strings Found From -> ', StringToScan, ' -> 0')
+            return
+         end
+
+         print('[+] Strings Found From -> ', StringToScan, ' -> ', StringList.Count)
+
+         for i = 0, StringList.Count - 1 do
+             table.insert(Table, StringList[i])
+         end
+end
+
+-- ######################################################################### --
+
+function AddFilePathsFromKeywordToTable(Table, Keyword)
+         local FilePathsFromKeyword = GetFilePathsFromKeyword(Keyword)
+
+         if FilePathsFromKeyword == nil then return end
+
+         for i = 1, GetTableLenght(Table) do
+             table.insert(Table, FilePathsFromKeyword[i])
+         end
+end
+
+-- ######################################################################### --
+
+function GetFilePathsFromKeyword(Keyword)
+         local FilePathsFromKeyword = {}
+         local StringList = AOBScan(StringToHexBytesString(Keyword))
+
+         if StringList == nil then
+            print('[+] Strings Found From -> ', Keyword, ' -> 0')
+            return
+         end
+
+         print('[+] Strings Found From -> ', Keyword, ' -> ', StringList.Count)
+
+         for i = 0, StringList.Count - 1 do
+             local Addr = getAddress(StringList[i])
+
+             if readBytes(Addr + string.len(Keyword)) == 00 then
+                while readBytes(Addr - 1) ~= 00 do
+                      Addr = Addr - 1
+                end
+
+                local FilePathFromKeyword = readString(Addr, PATH_MAX_SIZE, false)
+
+                if FilePathFromKeyword ~= nil then
+                   if string.len(FilePathFromKeyword) > string.len(Keyword) and PathHasBadChar(FilePathFromKeyword) == false then
+                      table.insert(FilePathsFromKeyword, FilePathFromKeyword)
+                   end
+                end
+             end
+         end
+
+         return FilePathsFromKeyword
+end
+
+-- ######################################################################### --
+
+function GetPathsFromResults(Table)
+         local PathsFromResults = {}
+
+         for i = 1, GetTableLenght(Table) do
+             local Addr = getAddress(Table[i])
+
+             --if readBytes(Addr - 1) == 00 then
+                local Path = readString(Addr, PATH_MAX_SIZE, false)
+
+                if Path ~= nil then
+                   if string.find(Path, '.', 1, true) and PathHasBadChar(Path) == false then
+                      table.insert(PathsFromResults, Path)
+                   end
+                end
+             --end
+         end
+
+         return PathsFromResults
+end
+
+-- ######################################################################### --
+
+function SaveToFile(Table)
+         local PackDumperPathList = io.open (PATH_PACK_DUMPER_PATH_LIST, 'w')
+
+         for i = 1, GetTableLenght(Table) do
+             PackDumperPathList:write(Table[i], '\n')
+         end
+
+         PackDumperPathList:close()
+end
+
+-- ######################################################################### --
+-- ######################################################################### --
+-- ######################################################################### --
+
+GetLuaEngine().MenuItem5.doClick()
+
+print('## PathListDumper Started !\n')
+
+if getOpenedProcessID() == 0 then
+   print('[!] No Process Attached to CheatEngine !')
+   return
+end
+
+-----------------------------------------------
+AddStringListToTable(Results, 'd:/ymir work/')
+AddStringListToTable(Results, 'd:/Ymir Work/')
+AddStringListToTable(Results, 'd:/Ymir work/')
+AddStringListToTable(Results, 'd:/ymir Work/')
+AddStringListToTable(Results, 'd:/YMIR WORK/')
+
+AddStringListToTable(Results, 'D:/ymir work/')
+AddStringListToTable(Results, 'D:/Ymir Work/')
+AddStringListToTable(Results, 'D:/Ymir work/')
+AddStringListToTable(Results, 'D:/ymir Work/')
+AddStringListToTable(Results, 'D:/YMIR WORK/')
+
+AddStringListToTable(Results, 'd:\\ymir work\\')
+AddStringListToTable(Results, 'd:\\Ymir Work\\')
+AddStringListToTable(Results, 'd:\\Ymir work\\')
+AddStringListToTable(Results, 'd:\\ymir Work\\')
+AddStringListToTable(Results, 'd:\\YMIR WORK\\')
+
+AddStringListToTable(Results, 'D:\\ymir work\\')
+AddStringListToTable(Results, 'D:\\Ymir Work\\')
+AddStringListToTable(Results, 'D:\\Ymir work\\')
+AddStringListToTable(Results, 'D:\\ymir Work\\')
+AddStringListToTable(Results, 'D:\\YMIR WORK\\')
+-----------------------------------------------
+AddStringListToTable(Results, 'bgm/')
+AddStringListToTable(Results, 'BGM/')
+AddStringListToTable(Results, 'icon/')
+AddStringListToTable(Results, 'locale/')
+AddStringListToTable(Results, 'locale_br/')
+AddStringListToTable(Results, 'locale_cz/')
+AddStringListToTable(Results, 'locale_de/')
+AddStringListToTable(Results, 'locale_en/')
+AddStringListToTable(Results, 'locale_es/')
+AddStringListToTable(Results, 'locale_fr/')
+AddStringListToTable(Results, 'locale_hu/')
+AddStringListToTable(Results, 'locale_pl/')
+AddStringListToTable(Results, 'locale_pt/')
+AddStringListToTable(Results, 'locale_ro/')
+AddStringListToTable(Results, 'locale_tr/')
+AddStringListToTable(Results, 'property/')
+AddStringListToTable(Results, 'season1/')
+AddStringListToTable(Results, 'season2/')
+AddStringListToTable(Results, 'sound/')
+AddStringListToTable(Results, 'textureset/')
+AddStringListToTable(Results, 'uiscript/')
+-----------------------------------------------
+local PathsFromResults = GetPathsFromResults(Results)
+-----------------------------------------------
+AddFilePathsFromKeywordToTable(PathsFromResults, 'item_proto')
+AddFilePathsFromKeywordToTable(PathsFromResults, 'mob_proto')
+
+AddFilePathsFromKeywordToTable(PathsFromResults, '.atr')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.bak')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.bat')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.bmp')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.dds')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.DDS')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.gr2')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.ifl')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.jpg')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.mdatr')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.mde')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.mp3')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.msa')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.msa~')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.mse')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.msenv')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.msf')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.msk')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.msm')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.msm~')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.mss')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.png')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.pra')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.prb')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.prd')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.pre')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.prt')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.psd')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.py')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.py~')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.rar')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.raw')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.scc')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.sfk')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.spt')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.sub')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.tga')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.txt')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.txt~')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.ufo')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.uvw')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.v1')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.wav')
+AddFilePathsFromKeywordToTable(PathsFromResults, '.wtr')
+-----------------------------------------------
+
+SaveToFile(PathsFromResults)
+
+print('\n[+] Finished ! Dumped Paths -> ', GetTableLenght(PathsFromResults), '| Check -> ' .. PATH_PACK_DUMPER_PATH_LIST)
+
+[Disable]
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+</CheatTable>
