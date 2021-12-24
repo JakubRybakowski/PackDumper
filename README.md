@@ -20,7 +20,7 @@ Safe Exception Handlers -> No (/SAFESEH:NO)
 # How to Use
 ✔️ Configure the ``PackDumperCfg.txt`` file with the required informations. Check [PackDumperCfg File Explanations](https://github.com/FyreMage32/PackDumper/blob/main/README.md#packdumpercfg-file-explanations)
 
-✔️ If you've set DumpMethod = 1 (BY_PATH_LIST), you also need to make a ``PackDumperPathList.txt`` first. Check **PackDumperPathList File Explanations**
+✔️ If you've set DumpMethod = 1 (BY_PATH_LIST), you also need to make a ``PackDumperPathList.txt`` first. Check [PackDumperPathList File Explanations](https://github.com/FyreMage32/PackDumper/blob/main/README.md#packdumperpathlist-file-explanations)
 
 ✔️ Move ``PackDumperCfg.txt`` and ``PackDumperPathList.txt`` (the last, just in case you made one) to your ``Local Disk (C:\)``
 
@@ -32,7 +32,7 @@ Safe Exception Handlers -> No (/SAFESEH:NO)
 
 📌 A ``PackDumperLog.txt`` file will be generated to your ``Local Disk (C:\)``. It contains useful informations, always check it!
 
-📌 Check **Hints you Should Know** to get extra tips
+📌 Check [Hints you Should Know](https://github.com/FyreMage32/PackDumper/blob/main/README.md#hints-you-should-know) to get extra tips
 
 # Hints you Should Know
 ✔️ The PackDumperCfg.txt file is loaded everytime before you start dumping something. It means you don't need to close the client to update some configuration
@@ -48,11 +48,11 @@ Safe Exception Handlers -> No (/SAFESEH:NO)
 * Property Entry -> Property[TAB]Value
 * Comment Line -> Starts with "--"
 
-✔️ Check **Getting the Cfg Properties** to get hints about how to get RVA's from functions and classes
+✔️ Check [Getting the Cfg Properties](https://github.com/FyreMage32/PackDumper/blob/main/README.md#getting-the-cfg-properties) to get hints about how to get RVA's from functions and classes
 
 -------------
 ``Property -> DumpMethod`` 
-* DumpMethod = 1 (BY_PATH_LIST) -> Works by calling CEterPackManager::Get() with a specific path as c_szFileName argument. You can make a PackDumperPathList.txt with PathListDumper.CT (CheatEngine Script). It's 100% automated and you can get ALL paths for ALL files inside the "pack" folder of your client. Check **PackDumperPathList File Explanations**
+* DumpMethod = 1 (BY_PATH_LIST) -> Works by calling CEterPackManager::Get() with a specific path as c_szFileName argument. You can make a PackDumperPathList.txt with PathListDumper.CT (CheatEngine Script). It's 100% automated and you can get ALL paths for ALL files inside the "pack" folder of your client. Check [PackDumperPathList File Explanations](https://github.com/FyreMage32/PackDumper/blob/main/README.md#packdumperpathlist-file-explanations)
 * DumpMethod = 2 (ON_LOAD) -> Works by hooking CEterPackManager::Get() to intercept (and copy) every file being loaded by the game
 * DumpMethod = 3 (AUTO_HOOK) -> Same as DumpMethod 2 (ON_LOAD), but the hook is automatically placed at the same time you inject the dll. Use it in case you want to dump a file thats loaded only when the client starts (e.g. some files from root)
 * Example -> DumpMethod[TAB]1
