@@ -28,10 +28,16 @@ Safe Exception Handlers -> No (/SAFESEH:NO)
 
 ✔️ Unless you've set DumpMethod = 3 (AUTO_HOOK), you need to ``press INSERT`` to start dumping
 
+📌 Files are dumped to ``C:\PackDumper``
+
+📌 A ``PackDumperLog.txt`` file will be generated to your ``Local Disk (C:\)``. It contains useful informations, always check it!
+
 📌 Check **Hints you Should Know** to get extra tips
 
 # Hints you Should Know
 ✔️ The PackDumperCfg.txt file is loaded everytime before you start dumping something. It means you don't need to close the client to update some configuration
+
+✔️ If you've set DumpMethod = 1 (BY_PATH_LIST) and you didn't enabled the console window in the source, a way to know the dumper finished it's work is by checking if the PackDumperLog.txt size stopped increasing (or just open it xD)
 
 ✔️ Once the game is hooked (DumpMethod 2 and 3), the dumper will never finish. If you want to stop, close the client
 
@@ -45,7 +51,7 @@ Safe Exception Handlers -> No (/SAFESEH:NO)
 ✔️ Check **Getting the Cfg Properties** to get hints about how to get RVA's from functions and classes
 
 -------------
-``Property -> DumpMethod``
+``Property -> DumpMethod`` 
 * DumpMethod = 1 (BY_PATH_LIST) -> Works by calling CEterPackManager::Get() with a specific path as c_szFileName argument. You can make a PackDumperPathList.txt with PathListDumper.CT (CheatEngine Script). It's 100% automated and you can get ALL paths for ALL files inside the "pack" folder of your client. Check **PackDumperPathList File Explanations**
 * DumpMethod = 2 (ON_LOAD) -> Works by hooking CEterPackManager::Get() to intercept (and copy) every file being loaded by the game
 * DumpMethod = 3 (AUTO_HOOK) -> Same as DumpMethod 2 (ON_LOAD), but the hook is automatically placed at the same time you inject the dll. Use it in case you want to dump a file thats loaded only when the client starts (e.g. some files from root)
@@ -53,7 +59,7 @@ Safe Exception Handlers -> No (/SAFESEH:NO)
 * Example -> DumpMethod[TAB]2
 * Example -> DumpMethod[TAB]3
 -------------
-``Property -> CEterPackManagerGet_CallType``
+``Property -> CEterPackManagerGet_CallType`` 
 * The number of the CEterPackManagerGet_NumX function prototype you want to use (e.g., if you want to use the default call type that common Metin2 clients uses, set it to 1, or if you made another custom Get() function prototype, set the number from your custom)
 * Example -> CEterPackManagerGet_CallType[TAB]1
 * Example -> CEterPackManagerGet_CallType[TAB]2
@@ -142,7 +148,7 @@ uiscript/mallwindow.py
 
 ✔️ Assembly Examples (Default Client):
 <details>
-  <summary>Region with references to various properties</summary>
+  <summary>Region with references to pCEterPackManager, CEterPackManagerGet & MappedFileLoad</summary>
 
 ```assembly
 metin2client.bin+BED20 - 55                    - push ebp
@@ -207,6 +213,86 @@ metin2client.bin+BEDEA - E8 3B9C1700           - call metin2client.bin+238A2A
 metin2client.bin+BEDEF - 8B E5                 - mov esp,ebp
 metin2client.bin+BEDF1 - 5D                    - pop ebp
 metin2client.bin+BEDF2 - C2 0400               - ret 0004 { 4 }
+```
+
+</details>
+
+<details>
+  <summary>Region with references to pCEterPackManager, CEterPackManagerGet, MappedFileLoad & CMappedFileSize</summary>
+
+```assembly
+metin2client.bin+16EA40 - 55                    - push ebp
+metin2client.bin+16EA41 - 8B EC                 - mov ebp,esp
+metin2client.bin+16EA43 - 6A FF                 - push -01 { 255 }
+metin2client.bin+16EA45 - 68 40FBF700           - push metin2client.bin+35FB40 { (1418432656) }
+metin2client.bin+16EA4A - 64 A1 00000000        - mov eax,fs:[00000000] { 0 }
+metin2client.bin+16EA50 - 50                    - push eax
+metin2client.bin+16EA51 - 81 EC 4C010000        - sub esp,0000014C { 332 }
+metin2client.bin+16EA57 - A1 94D20501           - mov eax,[metin2client.bin+43D294] { (472644414) }
+metin2client.bin+16EA5C - 33 C5                 - xor eax,ebp
+metin2client.bin+16EA5E - 89 45 F0              - mov [ebp-10],eax
+metin2client.bin+16EA61 - 53                    - push ebx
+metin2client.bin+16EA62 - 56                    - push esi
+metin2client.bin+16EA63 - 57                    - push edi
+metin2client.bin+16EA64 - 50                    - push eax
+metin2client.bin+16EA65 - 8D 45 F4              - lea eax,[ebp-0C]
+metin2client.bin+16EA68 - 64 A3 00000000        - mov fs:[00000000],eax { 0 }
+metin2client.bin+16EA6E - 8B F9                 - mov edi,ecx
+metin2client.bin+16EA70 - E8 9BFDFFFF           - call metin2client.bin+16E810
+metin2client.bin+16EA75 - 83 7F 20 10           - cmp dword ptr [edi+20],10 { 16 }
+metin2client.bin+16EA79 - 8D 77 0C              - lea esi,[edi+0C]
+metin2client.bin+16EA7C - 8B C6                 - mov eax,esi
+metin2client.bin+16EA7E - 72 02                 - jb metin2client.bin+16EA82
+metin2client.bin+16EA80 - 8B 06                 - mov eax,[esi]
+metin2client.bin+16EA82 - 50                    - push eax
+metin2client.bin+16EA83 - 68 68D7FB00           - push metin2client.bin+39D768 { ("CResource::Reload %s") }
+metin2client.bin+16EA88 - E8 C305FDFF           - call metin2client.bin+13F050
+metin2client.bin+16EA8D - 83 C4 08              - add esp,08 { 8 }
+metin2client.bin+16EA90 - 8D 8D ACFEFFFF        - lea ecx,[ebp-00000154]
+metin2client.bin+16EA96 - E8 0531FDFF           - call metin2client.bin+MappedFileLoad_RVA
+metin2client.bin+16EA9B - 83 7E 14 10           - cmp dword ptr [esi+14],10 { 16 }
+metin2client.bin+16EA9F - C7 45 FC 00000000     - mov [ebp-04],00000000 { 0 }
+metin2client.bin+16EAA6 - 72 02                 - jb metin2client.bin+16EAAA
+metin2client.bin+16EAA8 - 8B 36                 - mov esi,[esi]
+metin2client.bin+16EAAA - 8B 0D 6C860701        - mov ecx,[metin2client.bin+pCEterPackManager_RVA] { (0107AD00) }
+metin2client.bin+16EAB0 - 8D 85 A8FEFFFF        - lea eax,[ebp-00000158]
+metin2client.bin+16EAB6 - 50                    - push eax
+metin2client.bin+16EAB7 - 56                    - push esi
+metin2client.bin+16EAB8 - 8D 85 ACFEFFFF        - lea eax,[ebp-00000154]
+metin2client.bin+16EABE - 50                    - push eax
+metin2client.bin+16EABF - E8 8C700100           - call metin2client.bin+CEterPackManagerGet_RVA
+metin2client.bin+16EAC4 - 8B 1F                 - mov ebx,[edi]
+metin2client.bin+16EAC6 - 84 C0                 - test al,al
+metin2client.bin+16EAC8 - 74 14                 - je metin2client.bin+16EADE
+metin2client.bin+16EACA - FF B5 A8FEFFFF        - push [ebp-00000158]
+metin2client.bin+16EAD0 - 8D 8D ACFEFFFF        - lea ecx,[ebp-00000154]
+metin2client.bin+16EAD6 - E8 2536FDFF           - call metin2client.bin+CMappedFileSize_RVA
+metin2client.bin+16EADB - 50                    - push eax
+metin2client.bin+16EADC - EB 04                 - jmp metin2client.bin+16EAE2
+metin2client.bin+16EADE - 6A 00                 - push 00 { 0 }
+metin2client.bin+16EAE0 - 6A 00                 - push 00 { 0 }
+metin2client.bin+16EAE2 - 8B 43 14              - mov eax,[ebx+14]
+metin2client.bin+16EAE5 - 8B CF                 - mov ecx,edi
+metin2client.bin+16EAE7 - FF D0                 - call eax
+metin2client.bin+16EAE9 - 84 C0                 - test al,al
+metin2client.bin+16EAEB - B8 02000000           - mov eax,00000002 { 2 }
+metin2client.bin+16EAF0 - 75 05                 - jne metin2client.bin+16EAF7
+metin2client.bin+16EAF2 - B8 01000000           - mov eax,00000001 { 1 }
+metin2client.bin+16EAF7 - 8D 8D ACFEFFFF        - lea ecx,[ebp-00000154]
+metin2client.bin+16EAFD - 89 47 28              - mov [edi+28],eax
+metin2client.bin+16EB00 - E8 1B31FDFF           - call metin2client.bin+141C20
+metin2client.bin+16EB05 - 8B 4D F4              - mov ecx,[ebp-0C]
+metin2client.bin+16EB08 - 64 89 0D 00000000     - mov fs:[00000000],ecx { 0 }
+metin2client.bin+16EB0F - 59                    - pop ecx
+metin2client.bin+16EB10 - 5F                    - pop edi
+metin2client.bin+16EB11 - 5E                    - pop esi
+metin2client.bin+16EB12 - 5B                    - pop ebx
+metin2client.bin+16EB13 - 8B 4D F0              - mov ecx,[ebp-10]
+metin2client.bin+16EB16 - 33 CD                 - xor ecx,ebp
+metin2client.bin+16EB18 - E8 0D9F0C00           - call metin2client.bin+238A2A
+metin2client.bin+16EB1D - 8B E5                 - mov esp,ebp
+metin2client.bin+16EB1F - 5D                    - pop ebp
+metin2client.bin+16EB20 - C3                    - ret 
 ```
 
 </details>
