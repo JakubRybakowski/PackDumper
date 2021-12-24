@@ -18,7 +18,7 @@ Safe Exception Handlers -> No (/SAFESEH:NO)
 ```
 
 # How to Use
-✔️ Configure the ``PackDumperCfg.txt`` file with the required informations. Check **PackDumperCfg File Explanations**
+✔️ Configure the ``PackDumperCfg.txt`` file with the required informations. Check [PackDumperCfg File Explanations](https://github.com/FyreMage32/PackDumper/blob/main/README.md#packdumpercfg-file-explanations)
 
 ✔️ If you've set DumpMethod = 1 (BY_PATH_LIST), you also need to make a ``PackDumperPathList.txt`` first. Check **PackDumperPathList File Explanations**
 
